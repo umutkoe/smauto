@@ -1,0 +1,74 @@
+/* Audent Theme */
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+.theme-audent {
+  --text: #4b5563;
+  --text-h: #0a0a0a;
+  --bg: #ffffff;
+  --border: #e5e7eb;
+  --accent: #0d7a6e;
+  --accent-light: #16a39a;
+  --accent-glow: rgba(13, 122, 110, 0.1);
+  --glass: rgba(255, 255, 255, 0.8);
+  --card-bg: #ffffff;
+  --shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.theme-audent .app-shell {
+  max-width: 1120px;
+}
+
+.theme-audent .navbar.scrolled {
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.95);
+}
+
+.theme-audent .logo-icon-wrapper {
+  background: var(--accent);
+}
+
+.theme-audent .nav-cta {
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.theme-audent .primary-btn {
+  background: var(--accent);
+}
+
+.theme-audent .secondary-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.theme-audent .feature-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.theme-audent .glass-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.theme-audent .footer {
+  background: #0a0a0a;
+  color: #d1d5db;
+}
+
+.theme-audent .footer-content p, 
+.theme-audent .footer-links a {
+  color: #0d7a6e;
+}
+
+.theme-audent .gradient-text {
+  background: linear-gradient(135deg, #0a0a0a 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

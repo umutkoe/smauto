@@ -1,22 +1,30 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import Footer from './components/Footer'
 import './App.css'
+import './themes/audent.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [theme, setTheme] = useState('dark')
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'audent' : 'dark')
+  }
 
   return (
-    <div className="app-shell">
-      <Navbar />
-      <main className="content">
-        <Hero count={count} setCount={setCount} />
-        <Features />
-      </main>
-      <Footer />
-      <div className="bg-gradient"></div>
+    <div className={`theme-${theme}`}>
+      <div className="app-shell">
+        <Navbar theme={theme} toggleTheme={toggleTheme} />
+        <main className="content">
+          <Hero count={count} setCount={setCount} />
+          <Features />
+        </main>
+        <Footer />
+        {theme === 'dark' && <div className="bg-gradient"></div>}
+      </div>
     </div>
   )
 }

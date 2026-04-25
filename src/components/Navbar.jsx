@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Menu, X } from 'lucide-react';
+import { Cpu, Menu, X, Sun, Moon } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ theme, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -23,19 +23,26 @@ const Navbar = () => {
           <div className="logo-icon-wrapper">
             <Cpu className="nav-icon" size={24} />
           </div>
-          <span>SMAUTO</span>
+          <span>{theme === 'audent' ? 'AUDENT' : 'SMAUTO'}</span>
         </div>
 
         <div className="nav-links desktop-only">
           <a href="#features">Features</a>
           <a href="#docs">Docs</a>
-          <a href="#about">About</a>
+          <button className="theme-toggle" onClick={toggleTheme} title="Toggle Theme">
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
           <button className="nav-cta">Get Started</button>
         </div>
 
-        <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
+        <div className="mobile-actions">
+           <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -48,7 +55,6 @@ const Navbar = () => {
           >
             <a href="#features" onClick={() => setIsOpen(false)}>Features</a>
             <a href="#docs" onClick={() => setIsOpen(false)}>Docs</a>
-            <a href="#about" onClick={() => setIsOpen(false)}>About</a>
             <button className="nav-cta">Get Started</button>
           </motion.div>
         )}

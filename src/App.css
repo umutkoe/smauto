@@ -85,10 +85,31 @@
   box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
 }
 
-.mobile-toggle {
-  display: none;
-  color: var(--text-h);
+.theme-toggle {
   background: transparent;
+  color: var(--text-h);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  border: 1px solid var(--border);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .mobile-actions { display: flex; }
 }
 
 @media (max-width: 768px) {
