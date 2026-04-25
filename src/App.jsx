@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import Footer from './components/Footer'
+import AIAssistant from './components/AIAssistant'
 import './App.css'
 import './themes/audent.css'
 
@@ -23,6 +24,7 @@ function App() {
           <Features />
         </main>
         <Footer />
+        <AIAssistant />
         {theme === 'dark' && <div className="bg-gradient"></div>}
       </div>
     </div>
