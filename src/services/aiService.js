@@ -1,15 +1,24 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  baseURL: import.meta.env.VITE_OPENAI_BASE_URL,
-  dangerouslyAllowBrowser: true // Required for client-side API calls
-});
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || 'https://integrate.api.nvidia.com/v1';
+
+// Create openai instance only if apiKey exists to avoid immediate crash
+const openai = apiKey ? new OpenAI({
+  apiKey: apiKey,
+  baseURL: baseURL,
+  dangerouslyAllowBrowser: true
+}) : null;
 
 export const getAIResponse = async (prompt, onChunk) => {
+  if (!openai) {
+    console.warn("AI Service: OpenAI API key is missing. AI features will be disabled.");
+    throw new Error("API Key missing");
+  }
+
   try {
     const completion = await openai.chat.completions.create({
-      model: import.meta.env.VITE_AI_MODEL,
+      model: import.meta.env.VITE_AI_MODEL || "deepseek-ai/deepseek-v4-flash",
       messages: [{ role: "user", content: prompt }],
       temperature: 1,
       top_p: 0.95,
