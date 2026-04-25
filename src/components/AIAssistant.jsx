@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Loader2, X, Bot } from 'lucide-react';
+import { Sparkles, Send, Loader2, X, Bot, AlertCircle } from 'lucide-react';
 import { getAIResponse } from '../services/aiService';
 
 const AIAssistant = () => {
@@ -9,6 +9,7 @@ const AIAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState('');
+  const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -22,6 +23,7 @@ const AIAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
+    setError(null);
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     const currentInput = input;
@@ -33,7 +35,7 @@ const AIAssistant = () => {
 
     try {
       await getAIResponse(currentInput, (chunk) => {
-        if (chunk.content) {
+        if (chunk.content || chunk.reasoning) {
           fullResponse += chunk.content;
           setStreamingMessage(fullResponse);
         }
@@ -41,10 +43,19 @@ const AIAssistant = () => {
       
       if (fullResponse) {
         setMessages(prev => [...prev, { role: 'assistant', content: fullResponse }]);
+      } else {
+        throw new Error("Boş yanıt alındı.");
       }
-    } catch (error) {
-      console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Hizmete şu an ulaşılamıyor. Lütfen API anahtarlarınızı kontrol edin." }]);
+    } catch (err) {
+      console.error("AI Assistant Error:", err);
+      const errorMsg = err.message.includes("401") 
+        ? "API anahtarı geçersiz (401 Unauthorized)." 
+        : err.message.includes("404")
+        ? "Model veya API adresi bulunamadı (404 Not Found)."
+        : "Bağlantı hatası oluştu. Lütfen konsolu (F12) kontrol edin.";
+      
+      setError(errorMsg);
+      setMessages(prev => [...prev, { role: 'assistant', content: `Hata: ${errorMsg}`, isError: true }]);
     } finally {
       setStreamingMessage('');
       setIsLoading(false);
@@ -88,7 +99,8 @@ const AIAssistant = () => {
                 </div>
               )}
               {messages.map((msg, i) => (
-                <div key={i} className={`message ${msg.role}`}>
+                <div key={i} className={`message ${msg.role} ${msg.isError ? 'error-msg' : ''}`}>
+                  {msg.isError && <AlertCircle size={14} style={{ marginRight: 8, display: 'inline' }} />}
                   {msg.content}
                 </div>
               ))}
