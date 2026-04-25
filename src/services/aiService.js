@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || 'https://integrate.api.nvidia.com/v1';
 
-// Create openai instance only if apiKey exists to avoid immediate crash
 const openai = apiKey ? new OpenAI({
   apiKey: apiKey,
   baseURL: baseURL,
@@ -12,7 +11,7 @@ const openai = apiKey ? new OpenAI({
 
 export const getAIResponse = async (prompt, onChunk) => {
   if (!openai) {
-    console.warn("AI Service: OpenAI API key is missing. AI features will be disabled.");
+    console.error("AI Service: API Key is missing.");
     throw new Error("API Key missing");
   }
 
@@ -23,20 +22,23 @@ export const getAIResponse = async (prompt, onChunk) => {
       temperature: 1,
       top_p: 0.95,
       max_tokens: 16384,
+      // Pass the specific reasoning parameters from the original snippet
+      chat_template_kwargs: { "thinking": true, "reasoning_effort": "high" },
       stream: true
     });
 
-    let fullContent = "";
+    let accumulatedContent = "";
     for await (const chunk of completion) {
       const content = chunk.choices[0]?.delta?.content || "";
+      // Handle reasoning content if the model provides it
       const reasoning = chunk.choices[0]?.delta?.reasoning || chunk.choices[0]?.delta?.reasoning_content || "";
       
-      if (reasoning || content) {
-        fullContent += content;
-        if (onChunk) onChunk({ content, reasoning, fullContent });
+      if (content || reasoning) {
+        accumulatedContent += content;
+        if (onChunk) onChunk({ content, reasoning, accumulatedContent });
       }
     }
-    return fullContent;
+    return accumulatedContent;
   } catch (error) {
     console.error("AI Service Error:", error);
     throw error;
